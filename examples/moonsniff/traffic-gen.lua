@@ -40,7 +40,7 @@ function generateTraffic(queue, args)
         local hist = hist:new()
         local mempool = memory.createMemPool(function(buf)
                 buf:getUdpPacket():fill{
-                        pktLength = PKT_LEN;
+                        pktLength = PKT_LEN
                 }
         end)
         local bufs = mempool:bufArray()
@@ -55,8 +55,13 @@ function generateTraffic(queue, args)
 
                 for i, buf in ipairs(bufs) do
                         local pkt = buf:getUdpPacket()
+			pkt.ip4:setID(pkt_id)
                         pkt.payload.uint32[0] = pkt_id
                         pkt_id = pkt_id + 1
+			print("next packet ------------------")
+			print("getter: " .. pkt.ip4:getID())
+			print("direct: " .. pkt.ip4.id)
+			print("payload: " .. pkt.payload.uint32[0])
                 end
 
                queue:send(bufs)
