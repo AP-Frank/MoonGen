@@ -43,6 +43,14 @@ function forward(rxQueue, txQueue)
 	while lm.running() do -- check if Ctrl+c was pressed
 		-- receive one or more packets from the queue
 		local count = rxQueue:recv(bufs)
+
+		for i = 1, count do
+			pkt = bufs[i]:getUdpPacket()
+			print("next packet ------------------")
+                        print("getter: " .. pkt.ip4:getID())
+                        print("direct: " .. pkt.ip4.id)
+                        print("payload: " .. pkt.payload.uint32[0])
+		end
 		-- send out all received bufs on the other queue
 		-- the bufs are free'd implicitly by this function
 		txQueue:sendN(bufs, count)
